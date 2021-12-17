@@ -1,18 +1,47 @@
-# Welcome to GitHub
+# Reinforcement Learning Project - Actor-Critic learning to fly
+This repository is for solving the normal rotor and tilt-rotor enviroment of quadcopter using actor-critic (A2C and A3C) methods and comparing the performance with DQN and DDQN. The study proposes an A2C with 8 tails for actor and a tail for critic to solve the tiltrotor problem. The propsed approach is basically On-policy advantage actor critic with added entropy loss and advantage.
 
-Welcome to GitHub—where millions of developers work together on software. Ready to get started? Let’s learn how this all works by building and publishing your first GitHub Pages website!
+## Enviroment
+ Markup : * Observation Space:
+  * Vector of 18 for Normal Rotor (3xError in Desired Position, 3xError in Body Rates, 3xError in Desire Velocity, 3x3 flattened Rotation Matrix)
+  * Vector of 22 for Tiltrotor (Normal Observation Vector of 18 + 4 Errors in tilt rotor)
+*Action Space – Continuous
+  * 4 continuous actions for each normal rotor
+  * 4 continuous actions for normal and 4 for tiltrotor
+  * Fuzzification (0 – 1 for normal rotors, -1 – 1 for tiltrotors with 0.2 step) or vector quantization
+  
+![image](https://user-images.githubusercontent.com/55484402/146592780-98571b77-018f-465d-8a63-b4d798c72371.png)
 
-## Repositories
+![image](https://user-images.githubusercontent.com/55484402/146592754-f888c283-a7f4-4d33-9352-d6225660ac8b.png)
 
-Right now, we’re in your first GitHub **repository**. A repository is like a folder or storage space for your project. Your project's repository contains all its files such as code, documentation, images, and more. It also tracks every change that you—or your collaborators—make to each file, so you can always go back to previous versions of your project if you make any mistakes.
+## Reward Function
+The reward function is given below where there is a positive reward for staying alive (not crashing) and penalties for errors in action, velocity, position, roll and pitch.
 
-This repository contains three important files: The HTML code for your first website on GitHub, the CSS stylesheet that decorates your website with colors and fonts, and the **README** file. It also contains an image folder, with one image file.
+𝑟_𝑡=𝛽−𝛼_𝑎∥𝑎∥_2−∑129_(𝑘∈{𝑝,𝑣,𝜔})▒  𝛼_𝑘 ├ ∥𝑒_𝑘∥┤_2− ∑129_├ 𝑗∈∣𝜙,𝜃}▒  𝛼_𝑗 ├ ∥𝑒_𝑗∥┤_2−∑129_├ 𝑗∈∣𝜙,𝜃}▒  𝛼_𝑗 ├ ∥𝑒_𝑗∥┤_2![image](https://user-images.githubusercontent.com/55484402/146592873-e9510fd0-5e1e-4e0c-bc21-8c98cf6964fa.png)
 
-## Describe your project
+ Markup : * β ≥ 0 reward for staying alive
 
-You are currently viewing your project's **README** file. **_README_** files are like cover pages or elevator pitches for your project. They are written in plain text or [Markdown language](https://guides.github.com/features/mastering-markdown/), and usually include a paragraph describing the project, directions on how to use it, who authored it, and more.
+* 𝛂_∗ = 𝑤𝑒𝑖𝑔𝑡ℎ𝑠 𝑓𝑜𝑟 𝑣𝑎𝑟𝑖𝑜𝑢𝑠 𝑡𝑒𝑟𝑚𝑠
 
-[Learn more about READMEs](https://help.github.com/en/articles/about-readmes)
+* ∥𝒂∥_𝟐 = Penalty for wrong actions
+
+* 𝒆_𝒌  = error in position (ep), velocity (ev), and body rates (eω) 
+
+* 𝒆_𝒋  = error in roll (eφ) , pitch (eθ) 
+![image](https://user-images.githubusercontent.com/55484402/146592902-62466b46-e175-4e42-adb5-14df58ae4488.png)
+
+
+## Results
+A2C, A3C, DQN and DDQN were compared with the normal rotor quadcopter enviroment where you can turn on each rotor at different level of speeds. A2C and A3C had the same network architecture and DQN and DDQN had the same architecture and parameters. The comparision is made against time.
+
+![image](https://user-images.githubusercontent.com/55484402/146594183-ee80b8cd-d70e-47b8-b5a7-73897e8e3fcf.png)
+
+
+
+https://user-images.githubusercontent.com/55484402/146594520-69391b44-2cdc-4fb5-9a71-f12d904723aa.mp4
+
+
+
 
 ## Your first website
 
